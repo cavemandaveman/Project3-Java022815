@@ -1,6 +1,10 @@
 package answers;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -104,7 +108,7 @@ public class PokerUI {
 			   sendInput(userInput);
 			   //Close the current window and open the game window
 			   frame1.dispatchEvent(new WindowEvent(frame1, WindowEvent.WINDOW_CLOSING));
-			   createGameFrame();
+			   createGameFrame(userInput);
 			   }
 	   });
 	   
@@ -121,14 +125,70 @@ public class PokerUI {
 	   
    }
    
-   public void createGameFrame() {
+   public void createGameFrame(List<String> initialValues) {
+	   
+	   double anteSize = Double.parseDouble(initialValues.get(2));
+	   double walletSize = Double.parseDouble(initialValues.get(3));
 	   
 	   JFrame frame2 = new JFrame("Poker Game");
 	   frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	   
 	   JPanel mainPanel = new JPanel();
-       mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+       mainPanel.setLayout(new GridLayout(0,3));
+       
+       JPanel panel1 = new JPanel();
+       JPanel panel2 = new JPanel();
+       JPanel panel3 = new JPanel();
+       JPanel panel4 = new JPanel();
+       JPanel panel5 = new JPanel();
+       JPanel panel6 = new JPanel();
+       JPanel panel7 = new JPanel();
+       JPanel panel8 = new JPanel();
+       JPanel panel9 = new JPanel();
+       mainPanel.add(panel1);
+       mainPanel.add(panel2);
+       mainPanel.add(panel3);
+       mainPanel.add(panel4);
+       mainPanel.add(panel5);
+       mainPanel.add(panel6);
+       mainPanel.add(panel7);
+       mainPanel.add(panel8);
+       mainPanel.add(panel9);
+       
+       JButton quitButton = new JButton("Quit");
+	   quitButton.addActionListener(new ActionListener() {
+	       public void actionPerformed(ActionEvent event) {
+	           System.exit(0);
+	       }
+	   });
 	   
+	   panel1.setLayout(new GridBagLayout());
+	   panel3.setLayout(new GridBagLayout());
+	   panel4.setLayout(new GridBagLayout());
+	   panel6.setLayout(new GridBagLayout());
+	   panel8.setLayout(new GridBagLayout());
+       
+       panel1.add(new JLabel("CPU1 "));
+       panel1.add(new JLabel (blankCards()));
+       panel1.add(new JLabel(" Wallet: $"));
+       panel2.add(new JLabel("Pot"));
+       panel3.add(new JLabel("CPU2 "));
+       panel3.add(new JLabel (blankCards()));
+       panel3.add(new JLabel(" Wallet: $"));
+       panel4.add(new JLabel("CPU3 "));
+       panel4.add(new JLabel (blankCards()));
+       panel4.add(new JLabel(" Wallet: $"));
+       //panel5.add(new JLabel(""));
+       panel6.add(new JLabel("CPU4 "));
+       panel6.add(new JLabel (blankCards()));
+       panel6.add(new JLabel(" Wallet: $"));
+       panel7.add(new JButton("Fold"));
+       panel7.add(new JButton("Raise"));
+       panel8.add(new JLabel(initialValues.get(0) + " "));
+       panel8.add(new JLabel("Wallet: $" + walletSize));
+       panel9.add(new JButton("Next Round"));
+       panel9.add(quitButton);
+
 	   frame2.add(mainPanel);
 	   frame2.setVisible(true);
 	   frame2.pack();
@@ -139,4 +199,8 @@ public class PokerUI {
 	   System.out.println(userInput);
    }
 
+   public String blankCards() {
+	   String backs = "\uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0";
+	   return backs;
+   }
 }
