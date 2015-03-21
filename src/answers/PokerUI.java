@@ -1,13 +1,12 @@
 package answers;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -129,6 +128,7 @@ public class PokerUI {
 	   
 	   double anteSize = Double.parseDouble(initialValues.get(2));
 	   double walletSize = Double.parseDouble(initialValues.get(3));
+	   int numOfPlayers = Integer.parseInt(initialValues.get(1));
 	   
 	   JFrame frame2 = new JFrame("Poker Game");
 	   frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -154,13 +154,6 @@ public class PokerUI {
        mainPanel.add(panel7);
        mainPanel.add(panel8);
        mainPanel.add(panel9);
-       
-       JButton quitButton = new JButton("Quit");
-	   quitButton.addActionListener(new ActionListener() {
-	       public void actionPerformed(ActionEvent event) {
-	           System.exit(0);
-	       }
-	   });
 	   
 	   panel1.setLayout(new GridBagLayout());
 	   panel3.setLayout(new GridBagLayout());
@@ -171,7 +164,7 @@ public class PokerUI {
        panel1.add(new JLabel("CPU1 "));
        panel1.add(new JLabel (blankCards()));
        panel1.add(new JLabel(" Wallet: $"));
-       panel2.add(new JLabel("Pot"));
+       panel2.add(new JLabel("Pot: $"));
        panel3.add(new JLabel("CPU2 "));
        panel3.add(new JLabel (blankCards()));
        panel3.add(new JLabel(" Wallet: $"));
@@ -184,9 +177,36 @@ public class PokerUI {
        panel6.add(new JLabel(" Wallet: $"));
        panel7.add(new JButton("Fold"));
        panel7.add(new JButton("Raise"));
+       panel7.add(new JLabel("Ante : $" + anteSize));
        panel8.add(new JLabel(initialValues.get(0) + " "));
        panel8.add(new JLabel("Wallet: $" + walletSize));
-       panel9.add(new JButton("Next Round"));
+       
+       JButton quitButton = new JButton("Quit");
+	   quitButton.addActionListener(new ActionListener() {
+	       public void actionPerformed(ActionEvent event) {
+	           System.exit(0);
+	       }
+	   });
+	   JButton nextRoundButton = new JButton("Next Round");
+	   quitButton.addActionListener(new ActionListener() {
+	       public void actionPerformed(ActionEvent event) {
+	    	   Shuffler s = new Shuffler();
+	           try {
+				s.shuffle(numOfPlayers);
+	           }
+	           catch (IOException e) {
+	        	   e.printStackTrace();
+	           }
+	           RunRound rr = new RunRound();
+	           try {
+	        	   JOptionPane.showMessageDialog(mainPanel, rr.round(),"Guess What?", JOptionPane.PLAIN_MESSAGE);
+	           }
+	           catch (IOException e) {
+	        	   e.printStackTrace();
+	           }
+	       }
+	   });
+       panel9.add(nextRoundButton);
        panel9.add(quitButton);
 
 	   frame2.add(mainPanel);
@@ -203,4 +223,5 @@ public class PokerUI {
 	   String backs = "\uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0";
 	   return backs;
    }
+   
 }
