@@ -9,12 +9,16 @@ public class RawCardList {
 	
 	public RawCardList() {}
 	
+	public void setCardList(List<String> cardList) {
+		this.cardList = cardList;
+	}
+	
 	public List<String> getCardList() {
 		return cardList;
 	}
-
-	public void setCardList(List<String> cardList) {
-		this.cardList = cardList;
+	
+	public String getP1Cards() {
+		return cardList.subList(0,5).toString();
 	}
 
 }

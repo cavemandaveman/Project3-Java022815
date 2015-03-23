@@ -4,14 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RunRound {
+	
+	private List<String> playerHands = new ArrayList<>();
+	private String winner = "";
 
-	public String round() throws IOException {
-		
-		int counter = 0;
-		
+	public void round() throws IOException {
+
 		FileReader fr = new FileReader("./src/resources/hands.txt");
 		BufferedReader reader = new BufferedReader(fr);
 
@@ -28,9 +30,8 @@ public class RunRound {
 		for(String s : cardStrings)
 			cardList.add(s);
 
-		CardIcons ci = new CardIcons();
-		ci.icons(cardList);
 		read.setCardList(cardList);
+		setPlayerHands(cardList);
 
 		CardValue values = new CardValue();
 		CardValue suits = new CardValue();
@@ -48,30 +49,48 @@ public class RunRound {
 
 
 		if(p1score > p2score) {
-			counter++;
 			System.out.println("P1 Wins round\n");
-			return "You Win!";
+			winner = "You Win This Round!";
 		}
 		else if(p1score == p2score && values.getP1HighCard() > values.getP2HighCard()) {
-			counter++;
 			System.out.println("P1 Wins round\n");
-			return "You Win!";
+			winner = "You Win This Round!";
 		}
 		else if(p1score == p2score && values.getP1HighCard() >= values.getP2HighCard() && values.getP1CardTotal() > values.getP2CardTotal()) {
-			counter++;
 			System.out.println("P1 Wins round\n");
-			return "You Win!";
+			winner = "You Win This Round!";
 		}
-		else if(p1score == p2score && values.getP1HighCard() == values.getP2HighCard()) {
+		else if(p1score == p2score && values.getP1HighCard() == values.getP2HighCard() && values.getP1CardTotal() == values.getP2CardTotal()) {
 			System.out.println("Tie\n");
-			return "Tie!";
+			winner = "You Win This Round!";
 		}
 		else {
 			System.out.println("P2 Wins round\n");
-			return "CPU1 Wins!";
-		}
-		
+			winner = "You Lose! CPU1 Wins Round";
+			}
+
+	}
+	
+	public void setPlayerHands(List<String> cardList) {
+		this.playerHands = cardList;
+	}
+	
+	public List<String> getPlayerHands() {
+		return playerHands;
+	}
+	
+	public List<String> getP1Cards() {
+		Collections.sort(playerHands.subList(0,5));
+		return playerHands.subList(0,5);
+	}
+	
+	public List<String> getP2Cards() {
+		Collections.sort(playerHands.subList(5,10));
+		return playerHands.subList(5,10);
 	}
 
+	public String whoWins() {
+		return winner;
+	}
 
 }

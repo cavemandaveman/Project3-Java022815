@@ -1,7 +1,6 @@
 package answers;
 
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +14,8 @@ public class PokerUI {
 	
 	private List<String> userInput = new ArrayList<>();
 	private String numPlayersText = "";
-   
+	private RunRound rr = new RunRound();
+	
 	public void createFormFrame() {
 	   
 	   JFrame frame1 = new JFrame("Poker Form");
@@ -123,11 +123,13 @@ public class PokerUI {
 	   frame1.setBounds(400,150,400,300);
 	   
    }
+	
    
    public void createGameFrame(List<String> initialValues) {
 	   
 	   double anteSize = Double.parseDouble(initialValues.get(2));
 	   double walletSize = Double.parseDouble(initialValues.get(3));
+	   double potSize = 0;
 	   int numOfPlayers = Integer.parseInt(initialValues.get(1));
 	   
 	   JFrame frame2 = new JFrame("Poker Game");
@@ -155,41 +157,30 @@ public class PokerUI {
        mainPanel.add(panel8);
        mainPanel.add(panel9);
 	   
-	   panel1.setLayout(new GridBagLayout());
-	   panel3.setLayout(new GridBagLayout());
-	   panel4.setLayout(new GridBagLayout());
-	   panel6.setLayout(new GridBagLayout());
-	   panel8.setLayout(new GridBagLayout());
+	   panel1.setLayout(new GridLayout(3,0));
+	   panel3.setLayout(new GridLayout(3,0));
+	   panel4.setLayout(new GridLayout(3,0));
+	   panel6.setLayout(new GridLayout(3,0));
+	   panel8.setLayout(new GridLayout(3,0));
+	   
+	   CardIcons ci = new CardIcons();
+	   JLabel winner = new JLabel();
+	   JLabel p1Cards = new JLabel();
+	   JLabel cpu1Cards = new JLabel();
+	   JLabel cpu2Cards = new JLabel();
+	   JLabel cpu3Cards = new JLabel();
+	   JLabel cpu4Cards = new JLabel();
        
-       panel1.add(new JLabel("CPU1 "));
-       panel1.add(new JLabel (blankCards()));
-       panel1.add(new JLabel(" Wallet: $"));
-       panel2.add(new JLabel("Pot: $"));
-       panel3.add(new JLabel("CPU2 "));
-       panel3.add(new JLabel (blankCards()));
-       panel3.add(new JLabel(" Wallet: $"));
-       panel4.add(new JLabel("CPU3 "));
-       panel4.add(new JLabel (blankCards()));
-       panel4.add(new JLabel(" Wallet: $"));
-       //panel5.add(new JLabel(""));
-       panel6.add(new JLabel("CPU4 "));
-       panel6.add(new JLabel (blankCards()));
-       panel6.add(new JLabel(" Wallet: $"));
-       panel7.add(new JButton("Fold"));
-       panel7.add(new JButton("Raise"));
-       panel7.add(new JLabel("Ante : $" + anteSize));
-       panel8.add(new JLabel(initialValues.get(0) + " "));
-       panel8.add(new JLabel("Wallet: $" + walletSize));
-       
-       JButton quitButton = new JButton("Quit");
+	   JButton quitButton = new JButton("Quit");
 	   quitButton.addActionListener(new ActionListener() {
 	       public void actionPerformed(ActionEvent event) {
 	           System.exit(0);
 	       }
 	   });
-	   JButton nextRoundButton = new JButton("Next Round");
-	   quitButton.addActionListener(new ActionListener() {
+	   JButton nextRoundButton = new JButton("Deal");
+	   nextRoundButton.addActionListener(new ActionListener() {
 	       public void actionPerformed(ActionEvent event) {
+	    	   //walletSize -= anteSize;
 	    	   Shuffler s = new Shuffler();
 	           try {
 				s.shuffle(numOfPlayers);
@@ -197,15 +188,61 @@ public class PokerUI {
 	           catch (IOException e) {
 	        	   e.printStackTrace();
 	           }
-	           RunRound rr = new RunRound();
 	           try {
-	        	   JOptionPane.showMessageDialog(mainPanel, rr.round(),"Guess What?", JOptionPane.PLAIN_MESSAGE);
+	        	   rr.round();
 	           }
 	           catch (IOException e) {
 	        	   e.printStackTrace();
 	           }
+	           p1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getP1Cards()));
+	           cpu1Cards.setText(blankCards());
+	           if(numOfPlayers == 3) {
+	        	   cpu1Cards.setText(blankCards());
+	        	   cpu2Cards.setText(blankCards());
+	           }
+	           if(numOfPlayers == 4) {
+	        	   cpu1Cards.setText(blankCards());
+	           	   cpu2Cards.setText(blankCards());
+	        	   cpu3Cards.setText(blankCards());
+	           }
+	           if(numOfPlayers == 5) {
+	        	   cpu1Cards.setText(blankCards());
+	           	   cpu2Cards.setText(blankCards());
+	        	   cpu3Cards.setText(blankCards());
+	        	   cpu4Cards.setText(blankCards());
+	           }
 	       }
 	   });
+	   
+       panel1.add(new JLabel("CPU1 ", SwingConstants.CENTER));
+       panel1.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.CENTER));
+       panel1.add(cpu1Cards);
+       panel2.add(winner);
+       panel3.add(new JLabel("CPU2 ", SwingConstants.CENTER));
+       panel3.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.CENTER));
+       panel3.add(cpu2Cards);
+       panel4.add(new JLabel("CPU3 ", SwingConstants.RIGHT));
+       panel4.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.RIGHT));
+       panel4.add(cpu3Cards);
+       panel5.add(new JLabel("Pot: $" + potSize, SwingConstants.CENTER));
+       panel6.add(new JLabel("CPU4 ", SwingConstants.LEFT));
+       panel6.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.LEFT));
+       panel6.add(cpu4Cards);
+       
+       JButton playHandButton = new JButton("Play Hand");
+	   playHandButton.addActionListener(new ActionListener() {
+	       public void actionPerformed(ActionEvent event) {
+	    	   cpu1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getP2Cards()));
+	    	   winner.setText(rr.whoWins());
+	       }
+	   });
+       panel7.add(new JButton("Fold"));
+       panel7.add(playHandButton);
+       panel7.add(new JLabel("Ante : $" + anteSize));
+       panel8.add(new JLabel(initialValues.get(0) + " ", SwingConstants.CENTER));
+       panel8.add(new JLabel("Wallet: $" + walletSize, SwingConstants.CENTER));
+       panel8.add(p1Cards);
+       
        panel9.add(nextRoundButton);
        panel9.add(quitButton);
 
@@ -220,8 +257,8 @@ public class PokerUI {
    }
 
    public String blankCards() {
-	   String backs = "\uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0";
+	   String backs = "<html><span style='font-size:28'> \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0 \uD83C\uDCA0";
 	   return backs;
    }
-   
+
 }

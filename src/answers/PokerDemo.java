@@ -7,8 +7,7 @@ public class PokerDemo {
 		PokerUI ui = new PokerUI();
 		
 		ui.createFormFrame();
-
-
+		
 	}
 
 }

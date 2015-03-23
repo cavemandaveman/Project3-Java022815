@@ -30,7 +30,7 @@ public class FindHighest {
 			rank = 6;
 			System.out.println("Flush");
 		}
-		else if( (value.get(4) - value.get(0) == 4)  ||  ( ( (value.get(3) - value.get(0) == 3) && (value.get(4) - value.get(0) == 12) ) ) ) {
+		else if( ((value.get(4)+value.get(3)+value.get(2)+value.get(1)+value.get(0)) / 5 == value.get(2)) && ((value.get(4) - value.get(0) == 4) )  ||  ( ( (value.get(3) - value.get(0) == 3) && (value.get(4) - value.get(0) == 12) ) ) ) {
 			rank = 5;
 			System.out.println("Straight");
 		}

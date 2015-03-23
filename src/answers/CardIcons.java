@@ -65,7 +65,7 @@ public class CardIcons {
 		
 		String cardIcons = "";
 		for(int i = 0; i < cards.size(); i++) {
-			cardIcons = (cards.get(i) + " ");
+			cardIcons += (icons.get(cards.get(i)) + " ");
 		}
 		
 		return cardIcons;
