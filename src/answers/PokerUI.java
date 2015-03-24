@@ -15,6 +15,13 @@ public class PokerUI {
 	private List<String> userInput = new ArrayList<>();
 	private String numPlayersText = "";
 	private RunRound rr = new RunRound();
+	private double walletSizeP1 = 0;
+	private double walletSizeCPU1 = 0;
+	private double walletSizeCPU2 = 0;
+	private double walletSizeCPU3 = 0;
+	private double walletSizeCPU4 = 0;
+	private double anteSize = 0;
+	private double potSize = 0;
 	
 	public void createFormFrame() {
 	   
@@ -127,9 +134,12 @@ public class PokerUI {
    
    public void createGameFrame(List<String> initialValues) {
 	   
-	   double anteSize = Double.parseDouble(initialValues.get(2));
-	   double walletSize = Double.parseDouble(initialValues.get(3));
-	   double potSize = 0;
+	   anteSize = Double.parseDouble(initialValues.get(2));
+	   walletSizeP1 = Double.parseDouble(initialValues.get(3));
+	   walletSizeCPU1 = Double.parseDouble(initialValues.get(3));
+	   walletSizeCPU2 = Double.parseDouble(initialValues.get(3));
+	   walletSizeCPU3 = Double.parseDouble(initialValues.get(3));
+	   walletSizeCPU4 = Double.parseDouble(initialValues.get(3));
 	   int numOfPlayers = Integer.parseInt(initialValues.get(1));
 	   
 	   JFrame frame2 = new JFrame("Poker Game");
@@ -170,6 +180,12 @@ public class PokerUI {
 	   JLabel cpu2Cards = new JLabel();
 	   JLabel cpu3Cards = new JLabel();
 	   JLabel cpu4Cards = new JLabel();
+	   JLabel p1Wallet = new JLabel("Wallet: $" + walletSizeP1, SwingConstants.CENTER);
+	   JLabel cpu1Wallet = new JLabel("Wallet: $" + walletSizeCPU1, SwingConstants.CENTER);
+	   JLabel cpu2Wallet = new JLabel("Wallet: $" + walletSizeCPU2, SwingConstants.CENTER);
+	   JLabel cpu3Wallet = new JLabel("Wallet: $" + walletSizeCPU3, SwingConstants.RIGHT);
+	   JLabel cpu4Wallet = new JLabel("Wallet: $" + walletSizeCPU4, SwingConstants.LEFT);
+	   JLabel pot = new JLabel();
        
 	   JButton quitButton = new JButton("Quit");
 	   quitButton.addActionListener(new ActionListener() {
@@ -177,10 +193,9 @@ public class PokerUI {
 	           System.exit(0);
 	       }
 	   });
-	   JButton nextRoundButton = new JButton("Deal");
-	   nextRoundButton.addActionListener(new ActionListener() {
+	   JButton dealButton = new JButton("Deal");
+	   dealButton.addActionListener(new ActionListener() {
 	       public void actionPerformed(ActionEvent event) {
-	    	   //walletSize -= anteSize;
 	    	   Shuffler s = new Shuffler();
 	           try {
 				s.shuffle(numOfPlayers);
@@ -194,56 +209,103 @@ public class PokerUI {
 	           catch (IOException e) {
 	        	   e.printStackTrace();
 	           }
+	           winner.setText("");
 	           p1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getP1Cards()));
 	           cpu1Cards.setText(blankCards());
+	           p1Wallet.setText("Wallet: $" + (walletSizeP1 -= anteSize));
+	    	   p1Wallet.setHorizontalAlignment(SwingConstants.CENTER);
+	    	   cpu1Wallet.setText("Wallet: $" + (walletSizeCPU1 -= anteSize));
+	    	   cpu1Wallet.setHorizontalAlignment(SwingConstants.CENTER);
+	    	   if(numOfPlayers == 2) {
+	    		   potSize += anteSize*2;
+	    		   pot.setText("Pot: $" + potSize);
+	    	   }
 	           if(numOfPlayers == 3) {
-	        	   cpu1Cards.setText(blankCards());
 	        	   cpu2Cards.setText(blankCards());
+		    	   cpu2Wallet.setText("Wallet: $" + (walletSizeCPU2 -= anteSize));
+		    	   cpu2Wallet.setHorizontalAlignment(SwingConstants.CENTER);
+		    	   potSize += anteSize*3;
+		    	   pot.setText("Pot: $" + potSize);
 	           }
 	           if(numOfPlayers == 4) {
-	        	   cpu1Cards.setText(blankCards());
 	           	   cpu2Cards.setText(blankCards());
 	        	   cpu3Cards.setText(blankCards());
+		    	   cpu2Wallet.setText("Wallet: $" + (walletSizeCPU2 -= anteSize));
+		    	   cpu2Wallet.setHorizontalAlignment(SwingConstants.CENTER);
+		    	   cpu3Wallet.setText("Wallet: $" + (walletSizeCPU3 -= anteSize));
+		    	   cpu3Wallet.setHorizontalAlignment(SwingConstants.RIGHT);
+		    	   potSize = anteSize*4;
+		           pot.setText("Pot: $" + potSize);
 	           }
 	           if(numOfPlayers == 5) {
-	        	   cpu1Cards.setText(blankCards());
 	           	   cpu2Cards.setText(blankCards());
 	        	   cpu3Cards.setText(blankCards());
 	        	   cpu4Cards.setText(blankCards());
+		    	   cpu2Wallet.setText("Wallet: $" + (walletSizeCPU2 -= anteSize));
+		    	   cpu2Wallet.setHorizontalAlignment(SwingConstants.CENTER);
+		    	   cpu3Wallet.setText("Wallet: $" + (walletSizeCPU3 -= anteSize));
+		    	   cpu3Wallet.setHorizontalAlignment(SwingConstants.RIGHT);
+		    	   cpu4Wallet.setText("Wallet: $" + (walletSizeCPU4 -= anteSize));
+		    	   cpu4Wallet.setHorizontalAlignment(SwingConstants.LEFT);
+		    	   potSize = anteSize*5;
+		           pot.setText("Pot: $" + potSize);
 	           }
 	       }
 	   });
 	   
        panel1.add(new JLabel("CPU1 ", SwingConstants.CENTER));
-       panel1.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.CENTER));
+       panel1.add(cpu1Wallet);
        panel1.add(cpu1Cards);
        panel2.add(winner);
-       panel3.add(new JLabel("CPU2 ", SwingConstants.CENTER));
-       panel3.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.CENTER));
-       panel3.add(cpu2Cards);
-       panel4.add(new JLabel("CPU3 ", SwingConstants.RIGHT));
-       panel4.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.RIGHT));
-       panel4.add(cpu3Cards);
-       panel5.add(new JLabel("Pot: $" + potSize, SwingConstants.CENTER));
-       panel6.add(new JLabel("CPU4 ", SwingConstants.LEFT));
-       panel6.add(new JLabel(" Wallet: $" + walletSize, SwingConstants.LEFT));
-       panel6.add(cpu4Cards);
+       if(numOfPlayers == 3) {
+    	   panel3.add(new JLabel("CPU2 ", SwingConstants.CENTER));
+    	   panel3.add(cpu2Wallet);
+    	   panel3.add(cpu2Cards);
+       }
+       else if(numOfPlayers == 4) {
+    	   panel3.add(new JLabel("CPU2 ", SwingConstants.CENTER));
+    	   panel3.add(cpu2Wallet);
+    	   panel3.add(cpu2Cards);
+    	   panel4.add(new JLabel("CPU3 ", SwingConstants.RIGHT));
+    	   panel4.add(cpu3Wallet);
+    	   panel4.add(cpu3Cards);
+       }
+       else if(numOfPlayers == 5) {
+    	   panel3.add(new JLabel("CPU2 ", SwingConstants.CENTER));
+    	   panel3.add(cpu2Wallet);
+    	   panel3.add(cpu2Cards);
+    	   panel4.add(new JLabel("CPU3 ", SwingConstants.RIGHT));
+    	   panel4.add(cpu3Wallet);
+    	   panel4.add(cpu3Cards);
+    	   panel6.add(new JLabel("CPU4 ", SwingConstants.LEFT));
+    	   panel6.add(cpu4Wallet);
+    	   panel6.add(cpu4Cards);
+       }
+       panel5.add(pot);
        
        JButton playHandButton = new JButton("Play Hand");
 	   playHandButton.addActionListener(new ActionListener() {
 	       public void actionPerformed(ActionEvent event) {
 	    	   cpu1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getP2Cards()));
 	    	   winner.setText(rr.whoWins());
+	    	   if(rr.whoWins() == "You Win This Round!") {
+	    		   p1Wallet.setText("Wallet: $" + (walletSizeP1 += potSize));
+	    	   }
+	    	   if(rr.whoWins() == "You Lose! CPU1 Wins Round") {
+	    		   cpu1Wallet.setText("Wallet: $" + (walletSizeCPU1 += potSize));
+	    	   }
+	    	   potSize = 0;
+	    	   pot.setText("Pot: $" + potSize);
 	       }
 	   });
        panel7.add(new JButton("Fold"));
        panel7.add(playHandButton);
        panel7.add(new JLabel("Ante : $" + anteSize));
        panel8.add(new JLabel(initialValues.get(0) + " ", SwingConstants.CENTER));
-       panel8.add(new JLabel("Wallet: $" + walletSize, SwingConstants.CENTER));
+       panel8.add(p1Wallet);
        panel8.add(p1Cards);
        
-       panel9.add(nextRoundButton);
+       panel9.add(dealButton);
        panel9.add(quitButton);
 
 	   frame2.add(mainPanel);
