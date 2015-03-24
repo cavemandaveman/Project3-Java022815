@@ -84,9 +84,24 @@ public class RunRound {
 		return playerHands.subList(0,5);
 	}
 	
-	public List<String> getP2Cards() {
+	public List<String> getCPU1Cards() {
 		Collections.sort(playerHands.subList(5,10));
 		return playerHands.subList(5,10);
+	}
+	
+	public List<String> getCPU2Cards() {
+		Collections.sort(playerHands.subList(10,15));
+		return playerHands.subList(10,15);
+	}
+	
+	public List<String> getCPU3Cards() {
+		Collections.sort(playerHands.subList(15,20));
+		return playerHands.subList(15,20);
+	}
+	
+	public List<String> getCPU4Cards() {
+		Collections.sort(playerHands.subList(20,25));
+		return playerHands.subList(20,25);
 	}
 
 	public String whoWins() {

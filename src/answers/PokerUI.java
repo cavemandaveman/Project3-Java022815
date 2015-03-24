@@ -96,25 +96,25 @@ public class PokerUI {
 			   }
 			   if(wallet < ante*3.0)
 				   JOptionPane.showMessageDialog(mainPanel, "Wallet must be at least $" + ante*3.00,"Error", JOptionPane.ERROR_MESSAGE);
-			   //Store number of players in string
-			   if(two.isSelected())
-				   numPlayersText = two.getText();
-			   else if(three.isSelected())
-				   numPlayersText = three.getText();
-			   else if(four.isSelected())
-				   numPlayersText = four.getText();
-			   else if(five.isSelected())
-				   numPlayersText = five.getText();
-			   //Add user input to ArrayList
-			   userInput.add(nameText.getText());
-			   userInput.add(numPlayersText);
-			   userInput.add(anteText.getText());
-			   userInput.add(walletText.getText());
-			   //Send ArrayList to method that prints it
-			   sendInput(userInput);
-			   //Close the current window and open the game window
-			   frame1.dispatchEvent(new WindowEvent(frame1, WindowEvent.WINDOW_CLOSING));
-			   createGameFrame(userInput);
+			   if(ante > 0.0 && wallet >= ante*3.0) {
+				   //Store number of players in string
+				   if(two.isSelected())
+					   numPlayersText = two.getText();
+				   else if(three.isSelected())
+					   numPlayersText = three.getText();
+				   else if(four.isSelected())
+					   numPlayersText = four.getText();
+				   else if(five.isSelected())
+					   numPlayersText = five.getText();
+				   //Add user input to ArrayList
+				   userInput.add(nameText.getText());
+				   userInput.add(numPlayersText);
+				   userInput.add(anteText.getText());
+				   userInput.add(walletText.getText());;
+				   //Close the current window and open the game window
+				   frame1.dispatchEvent(new WindowEvent(frame1, WindowEvent.WINDOW_CLOSING));
+				   createGameFrame(userInput);
+			   }
 			   }
 	   });
 	   
@@ -286,7 +286,24 @@ public class PokerUI {
        JButton playHandButton = new JButton("Play Hand");
 	   playHandButton.addActionListener(new ActionListener() {
 	       public void actionPerformed(ActionEvent event) {
-	    	   cpu1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getP2Cards()));
+	    	   if(numOfPlayers == 2) {
+	    		   cpu1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU1Cards()));
+	    	   }
+	    	   if(numOfPlayers == 3) {
+	    		   cpu1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU1Cards()));
+	    		   cpu2Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU2Cards()));
+	    	   }
+	    	   if(numOfPlayers == 4) {
+	    		   cpu1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU1Cards()));
+	    		   cpu2Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU2Cards()));
+	    		   cpu3Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU3Cards()));
+	    	   }
+	    	   if(numOfPlayers == 5) {
+	    		   cpu1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU1Cards()));
+	    		   cpu2Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU2Cards()));
+	    		   cpu3Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU3Cards()));
+	    		   cpu4Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getCPU4Cards()));
+	    	   }
 	    	   winner.setText(rr.whoWins());
 	    	   if(rr.whoWins() == "You Win This Round!") {
 	    		   p1Wallet.setText("Wallet: $" + (walletSizeP1 += potSize));
@@ -296,9 +313,26 @@ public class PokerUI {
 	    	   }
 	    	   potSize = 0;
 	    	   pot.setText("Pot: $" + potSize);
+	    	   if(walletSizeP1 <= 0.00) {
+	    		   JOptionPane.showMessageDialog(mainPanel, "You Lost All Your Money, You Suck!","Haha", JOptionPane.ERROR_MESSAGE);
+	    		   System.exit(0);
+	    	   }
 	       }
 	   });
-       panel7.add(new JButton("Fold"));
+	   JButton foldButton = new JButton("Fold");
+	   foldButton.addActionListener(new ActionListener() {
+	       public void actionPerformed(ActionEvent event) {
+	    	   winner.setText("You Lose! CPU1 Wins Round");
+	    	   cpu1Wallet.setText("Wallet: $" + (walletSizeCPU1 += potSize));
+	    	   potSize = 0;
+	    	   pot.setText("Pot: $" + potSize);
+	    	   if(walletSizeP1 <= 0.00) {
+	    		   JOptionPane.showMessageDialog(mainPanel, "You Lost All Your Money, You Suck!","Haha", JOptionPane.ERROR_MESSAGE);
+	    		   System.exit(0);
+	    	   }
+	       }
+	   });
+       panel7.add(foldButton);
        panel7.add(playHandButton);
        panel7.add(new JLabel("Ante : $" + anteSize));
        panel8.add(new JLabel(initialValues.get(0) + " ", SwingConstants.CENTER));
@@ -312,10 +346,6 @@ public class PokerUI {
 	   frame2.setVisible(true);
 	   frame2.pack();
 	   frame2.setBounds(300,150,600,400);
-   }
-   
-   public void sendInput(List<String> userInput) {
-	   System.out.println(userInput);
    }
 
    public String blankCards() {
