@@ -1,8 +1,5 @@
 package answers;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,31 +9,12 @@ public class RunRound {
 	private List<String> playerHands = new ArrayList<>();
 	private String winner = "";
 
-	public void round() throws IOException {
-
-		FileReader fr = new FileReader("./src/resources/hands.txt");
-		BufferedReader reader = new BufferedReader(fr);
-
-		RawCardList read = new RawCardList();
+	public void round() {
 		
-		String line = reader.readLine();
-		String[] cardStrings = line.split(" ");
-		
-		reader.close();
-		fr.close();
-
-		List<String> cardList = new ArrayList<>();
-
-		for(String s : cardStrings)
-			cardList.add(s);
-
-		read.setCardList(cardList);
-		setPlayerHands(cardList);
-
 		CardValue values = new CardValue();
 		CardValue suits = new CardValue();
-		values.assignValue(read);
-		suits.assignSuits(read);
+		values.assignValue(playerHands);
+		suits.assignSuits(playerHands);
 
 		FindHighest high = new FindHighest();
 		int p1score = 0;
@@ -48,27 +26,17 @@ public class RunRound {
 		p2score = high.countTotal();
 
 
-		if(p1score > p2score) {
-			System.out.println("P1 Wins round\n");
+		if(p1score > p2score) 
 			winner = "You Win This Round!";
-		}
-		else if(p1score == p2score && values.getP1HighCard() > values.getP2HighCard()) {
-			System.out.println("P1 Wins round\n");
+		else if(p1score == p2score && values.getP1CardTotal() > values.getP2CardTotal() && values.getP1HighCard() > values.getP2HighCard())
 			winner = "You Win This Round!";
-		}
-		else if(p1score == p2score && values.getP1HighCard() >= values.getP2HighCard() && values.getP1CardTotal() > values.getP2CardTotal()) {
-			System.out.println("P1 Wins round\n");
+		else if(p1score == p2score && values.getP1HighCard() >= values.getP2HighCard() && values.getP1CardTotal() > values.getP2CardTotal()) 
 			winner = "You Win This Round!";
-		}
-		else if(p1score == p2score && values.getP1HighCard() == values.getP2HighCard() && values.getP1CardTotal() == values.getP2CardTotal()) {
-			System.out.println("Tie\n");
+		else if(p1score == p2score && values.getP1HighCard() == values.getP2HighCard() && values.getP1CardTotal() == values.getP2CardTotal()) 
 			winner = "You Win This Round!";
-		}
-		else {
-			System.out.println("P2 Wins round\n");
+		else
 			winner = "You Lose! CPU1 Wins Round";
-			}
-
+		
 	}
 	
 	public void setPlayerHands(List<String> cardList) {

@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -14,7 +13,7 @@ public class PokerUI {
 	
 	private List<String> userInput = new ArrayList<>();
 	private String numPlayersText = "";
-	private RunRound rr = new RunRound();
+	public static RunRound rr = new RunRound();
 	private double walletSizeP1 = 0;
 	private double walletSizeCPU1 = 0;
 	private double walletSizeCPU2 = 0;
@@ -197,18 +196,8 @@ public class PokerUI {
 	   dealButton.addActionListener(new ActionListener() {
 	       public void actionPerformed(ActionEvent event) {
 	    	   Shuffler s = new Shuffler();
-	           try {
-				s.shuffle(numOfPlayers);
-	           }
-	           catch (IOException e) {
-	        	   e.printStackTrace();
-	           }
-	           try {
-	        	   rr.round();
-	           }
-	           catch (IOException e) {
-	        	   e.printStackTrace();
-	           }
+	           s.shuffle(numOfPlayers);
+	           rr.round();
 	           winner.setText("");
 	           p1Cards.setText("<html><span style='font-size:28'>" + ci.icons(rr.getP1Cards()));
 	           cpu1Cards.setText(blankCards());

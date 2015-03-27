@@ -1,16 +1,12 @@
 package answers;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Shuffler {
-
-	public void shuffle(int numPlayers) throws IOException {
-		
-		FileWriter fw = new FileWriter("./src/resources/hands.txt");
+	
+	public void shuffle(int numPlayers) {
 	    	
 		List<String> deck = new ArrayList<>();
 
@@ -68,14 +64,13 @@ public class Shuffler {
 		deck.add("AS");
 
 		Collections.shuffle(deck);
+		
+		List<String> cardList = new ArrayList<>();
+		
+		for(int i = 0; i < numPlayers*5; i++)
+			cardList.add(deck.get(i));
 
-		for(int i = 0; i < numPlayers*5; i++) {
-			fw.write(deck.get(i) + " ");
-		}
-
-		fw.write("\n");
-
-		fw.close();
+		PokerUI.rr.setPlayerHands(cardList);
 		
 	}
 

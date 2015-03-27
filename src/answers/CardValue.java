@@ -20,10 +20,8 @@ public class CardValue {
 	private int p2CardTotal;
 	private int p1HighCard;
 	private int p2HighCard;
-
-	public CardValue() {}
 	
-	public void assignValue(RawCardList list) {
+	public void assignValue(List<String> list) {
 		values.put("2C", 2);
         values.put("2D", 2);
         values.put("2H", 2);
@@ -77,12 +75,12 @@ public class CardValue {
         values.put("AH", 14);
         values.put("AS", 14);
         
-        for(int i = 0; i < list.getCardList().size(); i++) {
-        	newValues.add(values.get(list.getCardList().get(i)));
+        for(int i = 0; i < list.size(); i++) {
+        	newValues.add(values.get(list.get(i)));
         }
 	}
 	
-	public void assignSuits(RawCardList list) {
+	public void assignSuits(List<String> list) {
 		suits.put("2C", 1);
 	    suits.put("2D", 2);
 	    suits.put("2H", 3);
@@ -136,8 +134,8 @@ public class CardValue {
 	    suits.put("AH", 3);
 	    suits.put("AS", 4);
 	    
-	    for(int i = 0; i < list.getCardList().size(); i++) {
-        	newSuits.add(suits.get(list.getCardList().get(i)));
+	    for(int i = 0; i < list.size(); i++) {
+        	newSuits.add(suits.get(list.get(i)));
         }
 	}
 
